@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.perfume.mybatis.BestMapper">
+
+	<insert id="insertContent">
+		insert into tbl_boards(boardnum, b_number, writer, subject, content)
+			values(2, seq_tbl_boards.nextVal, #{writer}, #{subject}, #{content})
+	</insert>
+
+	<select id="getAllList" resultType="com.perfume.beans.BoardDTO">
+		select boardnum, b_number, writer,subject, content, reg_date, readcount, r from (
+			select boardnum, b_number, writer,subject, content, reg_date, readcount, rownum r from(
+				select * from tbl_boards where boardnum = 2 order by b_number desc)
+			order by b_number desc)
+		where r between #{rowStart} and #{rowEnd}
+	</select>
+	
+	<select id="getAllCount" resultType="int">
+		select count(*) from tbl_boards where boardnum = 2
+	</select>
+
+	<select id="getSearchList" resultType="com.perfume.beans.BoardDTO">
+        select boardnum, b_number, writer,  subject, content, reg_date, readcount, r from (
+            select boardnum, b_number, writer,  subject, content, reg_date, readcount, rownum r from(
+                select * from (select * from tbl_boards where boardnum = 2 order by b_number desc) where ${category} like '%'||#{input}||'%' )
+            order by b_number desc)
+        where r between #{rowStart} and #{rowEnd}
+    </select>
+
+	<select id="getSearchCount" resultType="int">
+        select count(*) from (select * from tbl_boards where boardnum = 2) where ${category} like '%'||#{input}||'%'
+    </select>
+
+	<update id="readCountUp">
+		update tbl_boards set
+			readcount = readcount+1
+		where b_number = #{b_number}
+	</update>
+
+	<select id="getContent" resultType="com.perfume.beans.BoardDTO">
+		select * from tbl_boards where b_number = #{b_number}
+	</select>
+
+	<update id="updateContent">
+		update tbl_boards set
+			subject = #{subject},
+			content = #{content}
+		where b_number = #{b_number}
+	</update>
+
+	<delete id="deleteContent">
+		delete tbl_boards where b_number = #{b_number}
+	</delete>
+	
+	
+	<!-- 댓글 -->
+	<select id="maxNumber" resultType="Integer">
+		select max(cno) from tbl_comment
+	</select>
+	
+	<select id="maxReNumber" resultType="Integer">
+		select max(re_step) from tbl_comment where ref = #{ref}
+	</select>
+	
+	<select id="getComment" resultType="com.perfume.beans.CommentDTO">
+		select * from tbl_comment where boardnum = #{boardnum} and bno = #{bno} order by ref desc, re_step asc
+	</select>
+
+	<select id="getCommentCount" resultType="Integer">
+		select count(*) from tbl_comment where boardnum = #{boardnum} and bno = #{bno}
+	</select>
+
+	<insert id="insertComment">
+		insert into tbl_comment(boardnum, bno, cno, writer, content, re_step, ref)
+			values(#{boardnum}, #{bno}, seq_tbl_comment.nextVal, #{writer}, #{content}, #{re_step}, #{ref})
+	</insert>
+
+	<update id="updateComment">
+		update tbl_comment set
+			content = #{content}
+		where bno = #{bno} and cno = #{cno}
+	</update>
+
+	<update id="deleteComment">
+		update tbl_comment set
+			status = '삭제'
+		where cno = #{cno}
+	</update>
+
+</mapper>

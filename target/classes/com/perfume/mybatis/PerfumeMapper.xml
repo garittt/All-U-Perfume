@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.perfume.mybatis.PerfumeMapper">
+
+	<!-- 향수 디테일 페이지 목록 -->
+	<select id="getDetail" resultType="com.perfume.beans.PerfumeDTO">
+	 <![CDATA[
+	 	select * from tbl_perfume where p_number = #{p_number} and f_name = #{f_name}
+	 ]]>
+	</select>
+
+
+	<!-- 게시물 갯수 -->
+	<select id="listCount" resultType="int">
+		select count(p_number) from tbl_perfume 
+	</select>
+	
+	<!-- 기본페이징처리 -->
+	<select id="listPage" resultType="com.perfume.beans.PerfumeDTO" parameterType="com.perfume.beans.Paging">
+	<![CDATA[
+		select rm, p_number, f_name , f_namee , f_pic from
+		(select rownum rm ,p_number, f_name,f_namee , f_pic from
+			(select * from tbl_perfume order by p_number desc) 
+				order by p_number desc) 
+					where rm between #{rowStart} and #{rowEnd} 
+	]]>
+	</select>
+	
+		<!-- 성별, 계절 검색 -->
+	<select id="cate" parameterType="List" resultType="com.perfume.beans.PerfumeDTO" >
+	<![CDATA[
+	select rm, p_number, f_name , gender, season , f_namee , f_pic from
+		(select rownum rm, p_number, f_name, gender, season , f_namee , f_pic from 
+			(select p_number, f_name, gender, season , f_namee , f_pic from tbl_perfume ]]>
+			<where>
+				<if test="c_gender != null">
+					<foreach collection="c_gender" item="item" separator="or">
+						gender = #{item}
+					</foreach>
+				</if>
+				<if test="c_season != null">	
+					<foreach collection="c_season" item="item" separator="or">
+						season = #{item}
+					</foreach>
+				</if>	
+			</where>
+			 order by p_number desc)	
+	<![CDATA[		
+		order by p_number desc) 
+	where rm between #{rowStart} and #{rowEnd}
+	]]>
+	</select>
+	
+	
+	<!-- 검색 후 리스트 갯수ㅡ -->
+	<select id="cateCount" resultType="int" >
+	<![CDATA[
+		select count(p_number)from tbl_perfume ]]>
+			<where>
+				<if test="c_gender != null">
+					<foreach collection="c_gender" item="item" separator="or">
+						gender = #{item}
+					</foreach>
+				</if>
+				<if test="c_season != null">	
+					<foreach collection="c_season" item="item" separator="or">
+						season = #{item}
+					</foreach>
+				</if>	
+			</where>
+	</select>
+	
+	<!-- 키워드 검색 -->
+	<select id="keyword" resultType="com.perfume.beans.PerfumeDTO">
+	<![CDATA[
+	select rm, p_number, f_name, gender, season , f_namee , f_pic from
+		(select rownum rm, p_number, f_name, gender, season , f_namee , f_pic from 
+			(select p_number, f_name, gender, season , f_namee , f_pic from tbl_perfume where]]>
+			 <include refid="search"></include> <![CDATA[ order by p_number desc)
+		order by p_number desc) 
+	where rm between #{rowStart} and #{rowEnd}
+	]]>
+	</select>
+	
+	<!-- 키워드 검색 갯수 -->
+	<select id = "keyCount" resultType="int">
+	<![CDATA[
+	select count(p_number) from tbl_perfume where]]>
+			 <include refid="search"></include> 
+	</select>
+	
+	<!-- 키워드 검색 if문 -->
+	<sql id ="search">
+	<if test="choose.equals('name')">
+		 (f_name like '%'||#{keyword}||'%')
+	</if>
+	
+	<if test="choose.equals('note')">
+		(topnote like '%'||#{keyword}||'%' 
+		or heartnote like '%'||#{keyword}||'%' 
+		or basenote like '%'||#{keyword}||'%')
+	</if>
+	</sql>
+	
+	
+	
+	<!--브랜드 찾기  -->
+	<select id="brandSearch" resultType="com.perfume.beans.BrandDTO">
+		select * from tbl_brand where d_number = #{d_number}
+	</select>
+		
+	
+	<!-- 노트정보 -->
+	<select id="noteInfo" parameterType="list" resultType="com.perfume.beans.NoteDTO">
+		select * from tbl_note where n_number = #{n_number}
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 리뷰 적기 -->
+	<insert id="reviewInsert">
+		insert into tbl_review(p_number,r_number,writer,like_re,unlike_re)
+		values(#{p_number},seq_tbl_review.nextval,#{writer},#{like_re},#{unlike_re})
+	</insert>
+	
+	
+	<!-- 리뷰 중복방지 입력 -->
+	<insert id="rchInsert">
+		insert into review_ch(c_like,p_number,id)
+		values(seq_review_like.nextval,#{p_number},#{writer})
+	</insert>
+	
+	
+	<!-- 리뷰 중복방지 확인 -->
+	<select id="rchLike" resultType="int" parameterType="com.perfume.beans.ReviewDTO">
+		select count(*) from review_ch 
+		where p_number = #{p_number} and id = #{writer}
+	</select>
+	
+	
+	<!-- 디테일 페이지 리뷰 -->
+	<select id="getReview" resultType="com.perfume.beans.ReviewDTO">
+		select * from tbl_review where p_number = #{p_number} order by r_number desc
+	</select>
+	
+	
+	
+	<!-- 리뷰전부 가져오기(admin에서 쓸것) -->
+	<select id = "getAReview" resultType="com.perfume.beans.ReviewDTO">
+		select rm, writer, like_re, unlike_re, reg_date, like_re_heart, unlike_re_heart, p_number, r_number 
+			from(select rownum rm, writer, like_re, unlike_re, reg_date, like_re_heart, unlike_re_heart, p_number, r_number
+				from (select * from tbl_review order by p_number desc)) 
+					where rm between #{rowStart} and #{rowEnd}
+	</select>
+	
+	<!-- 리뷰 전부 갯수 (admin) -->
+	<select id="getAReviewC" resultType ="int">
+	select count(p_number) from tbl_review
+	</select>
+	
+	
+	
+	<!-- 내가 쓴 리뷰 -->
+	<select id = "getMRveiw" resultType="com.perfume.beans.ReviewDTO">
+		select rm, writer, like_re, unlike_re, reg_date, like_re_heart, unlike_re_heart, p_number, r_number 
+			from(select rownum rm, writer, like_re, unlike_re, reg_date, like_re_heart, unlike_re_heart, p_number, r_number
+				from (select * from tbl_review where writer = #{writer} order by p_number desc)) 
+					where rm between #{rowStart} and #{rowEnd}	
+	</select>
+	
+	<!-- 내가 쓴 리뷰 갯수 -->
+	<select id="getMRveiwC" resultType ="int">
+		select count(p_number) from tbl_review where writer = #{writer}
+	</select>
+	
+	
+	
+	<!-- 리뷰 페이징 -->
+	<select id="getPReview" resultType="com.perfume.beans.ReviewDTO">
+		select rm, writer, like_re, unlike_re, reg_date, like_re_heart, unlike_re_heart, p_number, r_number 
+			from(select rownum rm, writer, like_re, unlike_re, reg_date, like_re_heart, unlike_re_heart, p_number, r_number
+				from (select * from tbl_review where p_number = #{p_number} order by r_number desc)) 
+					where rm between #{rowStart} and #{rowEnd}
+	</select>
+	
+	
+	
+	<!-- 리뷰갯수 -->
+	<select id="reviewCount" resultType="int">
+		select count(p_number) from tbl_review where p_number =#{p_number}
+	</select>
+	
+	
+	<!-- 리뷰 삭제하기(어드민) -->
+	<delete id="reDel" >
+		delete from tbl_review 
+		where r_number = #{r_number} 
+	</delete>
+	
+	<!-- 리뷰 삭제하기(개인) -->
+	<delete id="reMyDel" >
+		delete from tbl_review 
+		where r_number = #{r_number} 
+	</delete>
+	
+	<!-- 리뷰 수정하기 -->
+	<update id="reviewRe" >
+		update tbl_review set like_re = #{like_re}, unlike_re = #{unlike_re}
+			where r_number = #{r_number}
+	</update>
+	
+	<!-- 리뷰 수정하기 위해서 가져오기 -->
+	<select id="reviewGet" resultType="com.perfume.beans.ReviewDTO">
+	select * from tbl_review where r_number = #{r_number} 
+	</select>
+	
+	<!-- 이미지 업로드 -->
+	<update id="reviewImg">
+		update tbl_review set filename = #{filename} where p_number = #{p_number} and r_number = #{r_number}
+	</update>
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 향수 좋아요 중복방지 확인 -->
+	<select id="perLikeCh" resultType="int" parameterType="com.perfume.beans.ReviewDTO">
+		select count(*) from perfume_like 
+			where p_number = #{p_number} and id = #{id}
+	</select>
+	
+	
+	<!-- 향수 좋아요 중복방지 입력 -->
+	<insert id="perInsert">
+		insert into perfume_like(c_like,p_number,id)
+			values(seq_perfume_like.nextval,#{p_number},#{id})
+	</insert>
+	
+	
+	<!-- 향수 좋아요 -->
+	<update id="perLike">
+	<![CDATA[
+		update tbl_perfume set f_like_heart = f_like_heart +1 where p_number = #{p_number}
+	]]>
+	</update>
+	
+	
+	<!-- 향수 좋아요 랭킹 -->
+	<select id="perlikeRank" resultType="com.perfume.beans.PerfumeDTO">
+		select rownum,f_pic,p_number,f_name,f_like_heart , f_namee from
+			(select f_pic, p_number ,f_name,f_like_heart , f_namee from tbl_perfume order by f_like_heart desc) 
+				where rownum between 1 and 5
+	</select>
+	
+	
+
+	
+	
+	
+	
+	<!-- 리뷰 좋아요 싫어요 중복방지 입력 -->
+	<insert id="chInsert">
+		insert into review_like(c_like,p_number,r_number,id)
+			values(seq_review_like.nextval,#{p_number},#{r_number},#{id})
+	</insert>
+	
+	
+	<!-- 리뷰 좋아요 싫어요 중복방지 확인 -->
+	<select id="chLike" resultType="int" parameterType="com.perfume.beans.ReviewDTO">
+		select count(*) from review_like 
+			where p_number =#{p_number} and r_number = #{r_number} and id = #{id}
+	</select>
+	
+	
+	<!-- 리뷰 좋아요 -->
+	<update id="like">
+	<![CDATA[
+		update tbl_review set like_re_heart = like_re_heart +1 where r_number = #{r_number}
+	]]>
+	</update>
+	
+	<!-- 리뷰 싫어요 -->
+	<update id="unLike">
+	<![CDATA[
+		update tbl_review set unlike_re_heart = unlike_re_heart +1 where r_number = #{r_number}
+	]]>
+	</update>
+	
+	
+	
+	<!-- 리뷰 좋아요 랭킹 -->
+	<select id = "relikeRank" resultType="com.perfume.beans.ReviewDTO">
+		select rownum,f_name , p_number, r_number, like_re, like_re_heart, writer 
+		    from(select p.f_name , p.p_number, r.r_number, r.like_re, r.like_re_heart, r.writer 
+		    	from tbl_review r inner join tbl_perfume p on r.p_number = p.p_number order by r.like_re_heart desc)
+		    	where rownum between 1 and 5
+
+	</select>
+	
+	<!-- 리뷰 싫어요 랭킹 -->
+	<select id = "reunlikeRank" resultType="com.perfume.beans.ReviewDTO">
+		select rownum,f_name , p_number, r_number, unlike_re, unlike_re_heart, writer 
+		    from(select p.f_name , p.p_number, r.r_number, r.unlike_re, r.unlike_re_heart, r.writer 
+		    	from tbl_review r inner join tbl_perfume p on r.p_number = p.p_number order by r.unlike_re_heart desc )
+		    		where rownum between 1 and 5
+	</select>
+	
+	
+
+
+
+
+</mapper>

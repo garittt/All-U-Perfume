@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.perfume.mybatis.MemberMapper">
+	
+	<select id = "loginCheck" resultType="int">
+		select count(*) from tbl_member where id =#{id} and pw = #{pw} and auth !='탈퇴'
+	</select>
+	
+	<select id = "kLoginCheck" resultType="int">
+		select count(*) from tbl_member where id =#{id} and api_token = 'K_Token'
+	</select>
+	
+	
+	<insert id = "register">
+		insert into tbl_member(id, pw, name, email, phone, birthday, gender)
+		values(#{id},#{pw},#{name},#{email},#{phone},#{birthday},#{gender})
+	</insert>
+	
+	<insert id = "kakaoRegister">
+	insert into tbl_member(id, name, email, gender, img, api_token)
+		values(#{id},#{name},#{email},#{gender}, #{img}, #{api_token})
+	</insert>
+	
+	<update id="imgUpdate">
+		update tbl_member set img = #{img} where id=#{id}
+	</update>
+	
+	<select id="idCheck" resultType="int">
+		select count(*) from tbl_member where id = #{id}
+	</select>
+	
+	<select id="userInfo" resultType="com.perfume.beans.MemberDTO">
+		select * from tbl_member where id = #{id}
+	</select>
+	
+	<select id="pwCheck" resultType="String">
+		select pw from tbl_member where id = #{id}
+	</select>
+	
+	<update id="pwUpdate">
+		update tbl_member set pw = #{pw} where id = #{id}
+	</update>
+	
+	<update id="tmpDelete">
+		delete from tbl_member where id = #{id}
+	</update>
+	
+	<delete id="kakaoDelete">
+		delete from tbl_member where id = #{id} and api_token = 'K_Token'
+	</delete>
+	
+</mapper>

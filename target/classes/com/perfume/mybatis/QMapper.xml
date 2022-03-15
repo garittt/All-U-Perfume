@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.perfume.mybatis.QMapper">
+
+	<insert id="insertContent">
+		insert into tbl_boards(boardnum, b_number, writer, subject, content)
+			values(1, seq_tbl_boards.nextVal, #{writer}, #{subject}, #{content})
+	</insert>
+
+	<select id="getAllList" resultType="com.perfume.beans.BoardDTO">
+		select boardnum, b_number, writer,subject, content, reg_date, readcount, answer, r from (
+			select boardnum, b_number, writer,subject, content, reg_date, readcount, answer, rownum r from(
+				select * from (select * from tbl_boards where boardnum = #{boardnum}) order by b_number desc)
+			order by b_number desc)
+		where r between #{rowStart} and #{rowEnd}
+	</select>
+	
+	<select id="getAllCount" resultType="int">
+		select count(*) from tbl_boards where boardnum = #{boardnum}
+	</select>
+
+	<select id="getSearchList" resultType="com.perfume.beans.BoardDTO">
+		select boardnum, b_number, writer,  subject, content, reg_date, readcount, answer, r from (
+			select boardnum, b_number, writer,  subject, content, reg_date, readcount, answer, rownum r from(
+				select * from (select * from tbl_boards where boardnum = 1 order by b_number desc) where ${category} like '%'||#{input}||'%' )
+			order by b_number desc)
+		where r between #{rowStart} and #{rowEnd}
+	</select>
+
+	<select id="getSearchCount" resultType="int">
+		select count(*) from (select * from tbl_boards where boardnum = 1) where ${category} like '%'||#{input}||'%'
+	</select>
+
+	<update id="readCountUp">
+		update tbl_boards set
+			readcount = readcount+1
+		where b_number = #{b_number}
+	</update>
+
+	<select id="getContent" resultType="com.perfume.beans.BoardDTO">
+		select * from tbl_boards where b_number = #{b_number}
+	</select>
+
+	<update id="updateContent">
+		update tbl_boards set
+			subject = #{subject},
+			content = #{content}
+		where b_number = #{b_number}
+	</update>
+
+	<delete id="deleteContent">
+		delete tbl_boards where b_number = #{b_number}
+	</delete>
+	
+	<update id="insertAn">
+	update tbl_boards set answer = #{answer} where b_number = #{b_number}
+	</update>
+</mapper>

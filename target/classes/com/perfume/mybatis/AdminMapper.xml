@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.perfume.mybatis.AdminMapper">
+	
+	<select id = "adminLoginCheck" resultType="int">
+		select count(*) from tbl_admin where aid =#{aid} and pw = #{pw} and auth = '관리자'
+	</select>
+	
+	<select id="inquiry" resultType="com.perfume.beans.InquiryDTO">
+		select * from tbl_inquiry 
+	</select>
+	
+	<select id="listCount" resultType="int">
+		select count(*) from tbl_inquiry 
+	</select>
+	
+	<!-- 기본페이징처리 -->
+	<select id="listPage" resultType="com.perfume.beans.InquiryDTO" >
+	<![CDATA[
+		select r, subject, id, read_yn , creat_date , ms_content ,num, answer from
+		(select rownum r ,subject, id, read_yn , creat_date , ms_content , num, answer from
+			(select * from tbl_inquiry order by num desc) 
+				order by num desc) 
+					where r >= #{startRow} and r <= #{endRow} 
+	]]>
+	</select>
+	
+	<select id="inquiryContent" resultType="com.perfume.beans.InquiryDTO">
+		select * from tbl_inquiry where num = #{num}
+	</select>
+	
+	<delete id="inquiryDelete">
+		delete from tbl_inquiry where num = #{num}
+	</delete>
+	
+	<update id="inquiryAnswer">
+		update tbl_inquiry set answer = #{answer} , read_yn = '1' where num = #{num}
+	</update>
+	
+		
+	<select id="countReport" resultType="int">
+		select count(*) from tbl_report_board
+	</select>	
+	
+	<select id="checkingReport" resultType="com.perfume.beans.ReportBoardDTO">
+		select * from tbl_report_board where b_number = #{b_number}
+	</select>
+	
+	<select id="reportContent" resultType="com.perfume.beans.ReportBoardDTO" parameterType="com.perfume.beans.ReportBoardDTO">
+		select r, boardnum, b_number, writer, report, subject, content, reg_date, reportdate from
+			(select rownum r, boardnum, b_number, writer, report, subject, content, reg_date, reportdate from
+				(select * from tbl_report_board where boardnum = 2 order by reportdate desc)
+					order by reportdate desc) where r between #{rowStart} and #{rowEnd}
+	</select>
+	
+	<!-- 신고 테이블에서 값 삭제 -->
+	<delete id="deleteOnAdmin">
+		delete from tbl_report_board where b_number = #{b_number}
+	</delete>
+	
+	<!-- 실제 게시글 삭제 -->
+	<delete id="deleteOnBoard">
+		delete from tbl_boards where b_number = #{b_number}
+	</delete>
+	
+	<select id="searchMem" resultType="com.perfume.beans.MemberDTO">
+		select r, id, pw, name, email, phone, birthday, gender, regdate, auth, img, api_token from
+			(select rownum r, id, pw, name, email, phone, birthday, gender,regdate, auth, img, api_token from
+				(select * from tbl_member order by regdate asc)
+					order by regdate asc)where r between#{rowStart} and #{rowEnd}
+	</select>
+	
+	<select id="countMem" resultType="int">
+		select count(*) from tbl_member
+	</select>
+	
+	<select id="checkMem" resultType="com.perfume.beans.MemberDTO">
+		select * from tbl_member where id = #{id}
+	</select>
+	
+	<delete id = "memDelete"  >
+		delete from tbl_member where id = #{id}
+	</delete>
+	
+	
+	
+	
+</mapper>

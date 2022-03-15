@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.perfume.mybatis.SurveyMapper">
+
+	 <select id="noteNumCheck" parameterType="list" resultType="String">
+		select n_number from tbl_note 
+		<where> 
+			<foreach collection="note_type_num" item="item" separator="or">
+			note_type_num = #{item} 
+			</foreach>
+		</where>
+	</select>
+	
+	<select id="accNoteResult" parameterType="List" resultType="com.perfume.beans.PerfumeDTO">
+		select * from tbl_perfume where
+			topnote_num like '%'||#{n_number}||'%' or 
+				heartnote_num like '%'||#{n_number}||'%' or
+				basenote_num like '%'||#{n_number}||'%'
+			
+	</select>
+	
+	<select id="brandSearch" parameterType="List" resultType="com.perfume.beans.BrandDTO">
+        select * from tbl_brand where d_number = #{d_number}
+    </select>
+	
+	<select id="absSurvey1" resultType="com.perfume.beans.AbsSurveyDTO">
+		select * from abs_first
+	</select>
+	
+	<select id="absSurvey2" resultType="com.perfume.beans.AbsSurveyDTO">
+		select * from abs_second
+	</select>
+	
+	<select id="absSurvey3" resultType="com.perfume.beans.AbsSurveyDTO">
+		select * from abs_third 
+	</select>
+	
+	<select id="absSurvey4" resultType="com.perfume.beans.AbsSurveyDTO">
+		select * from abs_fourth where bind = #{third}
+	</select>
+	
+	<select id="absSurvey5" resultType="com.perfume.beans.AbsSurveyDTO">
+		select * from abs_fifth where bind = #{fourth}
+	</select>
+	
+	<!-- 컨펌페이지용 -->
+	<select id="absSurveyResult1" resultType="com.perfume.beans.AbsSurveyDTO">
+		select * from abs_first where gender = #{gender}
+	</select>
+	
+	<select id="absSurveyResult2" resultType="com.perfume.beans.AbsSurveyDTO">
+		select * from abs_second where season = #{season}
+	</select>
+	
+	<select id="absSurveyResult3" resultType="com.perfume.beans.AbsSurveyDTO">
+		select * from abs_third where third = #{third}
+	</select>
+	
+	<select id="absSurveyResult4" resultType="com.perfume.beans.AbsSurveyDTO">
+		select * from abs_fourth where fourth = #{fourth}
+	</select>
+	
+	<select id="absSurveyResult5" resultType="com.perfume.beans.AbsSurveyDTO">
+		select * from abs_fifth where fifth = #{fifth}
+	</select>
+	
+	<select id="absNoteNumCheck" parameterType="List" resultType="String">
+		select n_number from tbl_note where note_type_num = #{noteSearch}
+	</select>
+		
+	<select id="absNoteResult" resultType="com.perfume.beans.PerfumeDTO">
+	<![CDATA[
+		select * from (select * from (select * from tbl_perfume where gender = #{gender}) where season like '%'||#{season}||'%')
+		]]>
+			<where> 
+				<foreach collection="n_number" item="item" separator="or">
+					topnote_num like '%${item}%' 
+				</foreach>
+					or
+				<foreach collection="n_number" item="item" separator="or">
+					heartnote_num like '%${item}%'
+				</foreach>
+					or
+				<foreach collection="n_number" item="item" separator="or">
+					basenote_num like '%${item}%'
+				</foreach>
+			</where>
+			
+	</select>
+	
+</mapper>    
