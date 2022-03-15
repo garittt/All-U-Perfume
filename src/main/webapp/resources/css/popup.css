@@ -1,0 +1,86 @@
+@charset "UTF-8";
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+
+
+/* <link rel="stylesheet" href="/resources/css/popup.css">  */
+
+
+body {
+	text-align : center;
+	font-family: 'Nanum Gothic', cursive;
+}
+
+table{
+	border : 1px;
+	width: 500px; 
+	text-align: center; 
+	margin : auto; OR  ( margin-rigth : auto; margin-left : auto; ) "
+}
+
+
+.bo1{
+	
+	font-size : 20px;
+	font-weight: 500;
+	line-height:500px;
+	text-align : center;
+	width : 100%;
+	height :180px;
+	/* border: 5px solid #ff410e; */
+	
+	
+}
+/* 파일필드숨기 */
+.filebox label { 
+	width: 500px; 
+	height: 100px; 
+	display: inline-block; 
+	/* padding: .5em .75em;  */
+	color: white; 
+	font-size:25px;
+	line-height:100px;
+	vertical-align: middle; 
+	background-color: #76448A; 
+	cursor: pointer; 
+	border: 1px solid #ebebeb; 
+	border-bottom-color: #e2e2e2; 
+	border-radius: 10px;
+	} 
+	
+.filebox input[type="file"] { 
+	/* 파일 필드 숨기기 */ 
+	position: absolute; 
+	width: 1px; 
+	height: 1px; 
+	padding: 0; 
+	margin: -1px; 
+	overflow: hidden; 
+	clip:rect(0,0,0,0); 
+	border: 0; 
+	}
+	
+.input{
+	color : white; 
+	font-size:25px; 
+	width: 500px; 
+	height: 100px; 
+	border-radius: 10px;
+	border: none; 
+	background: #76448A;
+	font-family: 'Nanum Gothic', cursive;		
+	
+	
+}
+
+.inputsmall{
+	
+width: 90px; 
+height : 30px; 
+border :none; 
+background-color:#76448A; 
+color : white; 
+border-radius: 10px; 
+font-size : 15px;"
+
+}
+

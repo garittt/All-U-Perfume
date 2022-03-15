@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.perfume.mybatis.MypageMapper">
+
+
+	<!-- wishRegister 체크/  관심향수 중복 등록 방지  -->
+	<select id = "wishRegisterCh" resultType="int">
+		select count(*) from tbl_wish where writer = #{writer} and f_number = #{f_number}
+	</select>
+
+	<insert id="wishRegister">
+		insert into tbl_wish(writer , f_number , regdate ) values(#{writer},#{f_number} , sysdate)
+	</insert>
+	
+	<select id = "wishList" resultType="String">
+		select f_number from tbl_wish where writer = #{writer}
+	</select>
+
+	<select id = "wishSearch" parameterType="List" resultType="com.perfume.beans.PerfumeDTO">
+		select * from tbl_perfume where f_number = #{f_number} 
+	</select>
+
+	<delete id="wishListDelete">
+		delete from tbl_wish where writer = #{writer} and f_number = #{f_number}
+	</delete>
+	
+	<delete id="wishListDeleteCk" parameterType="List">
+		delete from tbl_wish where writer = #{writer} and f_number = #{chk}
+	</delete>
+	
+	<insert id="inquiryInsert">
+		insert into tbl_inquiry( num, subject,id,ms_content,creat_date) values(tbl_inquiry_seq.nextval,#{subject},#{id},#{ms_content},sysdate)
+	</insert>
+	
+	<select id="inquiryCount" resultType="int">
+		select count(*) from tbl_inquiry where id = #{id}
+	</select>
+
+	<select id="inquirySearch" resultType="com.perfume.beans.InquiryDTO">
+		<![CDATA[
+		select r, subject, id, read_yn , creat_date , ms_content ,num, answer from
+		(select rownum r ,subject, id, read_yn , creat_date , ms_content ,num, answer from
+			(select * from tbl_inquiry where id = #{id} order by num desc) 
+				order by num desc) 
+					where r >= #{startRow} and r <= #{endRow} 
+		]]>
+	</select>
+	
+	<select id="inquiryContent" resultType="com.perfume.beans.InquiryDTO">
+		select * from tbl_inquiry where num = #{num}
+	</select>
+	
+	<update id="inquiryUpdate">
+		update tbl_inquiry set subject = #{subject} , ms_content = #{ms_content} ,creat_date = sysdate where num = #{num}
+	</update>
+	
+	<delete id="inquiryDelete">
+		delete from tbl_inquiry where num = #{num}
+	</delete>
+	
+	<select id="myContQACount" resultType="int">
+		select count(*) from tbl_boards where writer = #{writer} and boardnum = 1
+	</select>
+	
+	<select id="myContRecCount" resultType="int">
+		select count(*) from tbl_boards where writer = #{writer} and boardnum = 2
+	</select>
+	
+	<select id="myContReCount" resultType="int">
+		select count(*) from tbl_review where writer = #{writer} 
+	</select>
+	
+	
+	<select id="myContQAList" resultType="com.perfume.beans.BoardDTO">
+		<![CDATA[
+		select r, boardnum , b_number , writer, subject , content , reg_date , readcount from
+		(select rownum r , boardnum , b_number , writer , subject , content , reg_date , readcount from
+			(select * from tbl_boards where writer = #{writer} and boardnum = 1 order by b_number desc) 
+				order by b_number desc) 
+					where r >= #{startRow} and r <= #{endRow} 
+		]]>
+	</select>
+	
+	<select id="myContRecList" resultType="com.perfume.beans.BoardDTO">
+		<![CDATA[
+		select r, boardnum , b_number , writer , subject , content , reg_date , readcount from
+		(select rownum r , boardnum , b_number , writer, subject , content , reg_date , readcount from
+			(select * from tbl_boards where writer = #{writer} and boardnum = 2 order by b_number desc) 
+				order by b_number desc) 
+					where r >= #{startRow} and r <= #{endRow} 
+		]]>
+	</select>
+	
+	<select id="myContReList" resultType="com.perfume.beans.ReviewDTO">
+		<![CDATA[
+		select r, p_number , r_number , writer, like_re , unlike_re , like_re_heart , unlike_re_heart , filename , reg_date from
+		(select rownum r ,  p_number , r_number , writer, like_re , unlike_re , like_re_heart , unlike_re_heart , filename , reg_date  from
+			(select * from tbl_review where writer = #{writer} order by r_number desc) 
+				order by r_number desc) 
+					where r >= #{startRow} and r <= #{endRow} 
+		]]>
+	</select>
+	
+	<select id="myContentRePer" resultType="com.perfume.beans.PerfumeDTO">
+		select f_name from tbl_perfume where p_number = #{p_number}
+	</select> 
+	
+
+	
+	
+	
+	
+
+
+
+
+</mapper>

@@ -1,0 +1,226 @@
+@charset "UTF-8";@charset "UTF-8";
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+@import url('https://fonts.googleapis.com/css2?family=Maven+Pro:wght@900&display=swap');
+
+body {
+	width : 100%;
+	height : 100%;
+	text-align : center;
+	background-color: #F5EEF8 ;
+	font-family: 'Nanum Gothic', cursive;
+}
+
+/* 상태바 관련 https://ironsky.tistory.com/21 */
+*{
+	margin: 0 ;
+	padding: 0;
+}
+
+
+li{
+	list-style: none;
+}
+
+a{
+	text-decoration: none;
+}
+
+.wrapper {
+	width: 1179px;
+	margin: 0 auto;
+}
+
+.clearfix{
+	content: '';
+	display: block;
+	clear: both;
+}
+
+header{
+	height: 75 px;
+	background-color :#76448A;
+	position: fixed;
+	width:100%;
+	z-index: 9999;
+	top:0;
+	left:0;
+	
+}
+
+h1{
+	color: white;
+	line-height: 75px;
+	float: left;
+	font-family: 'Maven Pro', sans-serif;
+}
+
+.menu{float:right;}
+
+.menu li{float:right; list-style: none;}
+
+.menu a{
+	font-family: 'Nanum Gothic', cursive;
+	line-height: 75px;
+	color : white ;
+	padding: 0 15px;
+	display: block;	
+	
+}
+
+/* 테이블관련  */
+table.type04 {
+  border-collapse: separate;
+  border-spacing: 1px;
+  text-align: left; 
+  line-height: 1.5;
+  border-top: 1px solid #ccc;
+  margin : 20px 10px;
+}
+table.type04 th {
+  width: 350px;
+  padding: 10px;
+  font-weight: 10px;
+  /* vertical-align: top; */
+  border-bottom: 1px solid #ccc;
+  
+}
+table.type04 td {
+  width: 350px;
+  padding: 10px;
+  /* vertical-align: top; */
+  border-bottom: 1px solid #ccc;
+}
+
+/* 테이블관련  */
+table.type03 {
+  border-collapse: separate;
+  border-spacing: 1px;
+  text-align: center; 
+  line-height: 1.5;
+  border-top: 1px solid #ccc;
+  margin : 20px 10px;
+}
+table.type03 th {
+  width: 150px;
+  padding: 10px;
+  font-weight: 10px;
+  /* vertical-align: top; */
+  border-bottom: 1px solid #ccc;
+  
+}
+table.type03 td {
+  width: 150px;
+  padding: 10px;
+  /* vertical-align: top; */
+  border-bottom: 1px solid #ccc;
+}
+
+/* 테이블관련  */
+table.type02 {
+  border-collapse: separate;
+  border-spacing: 1px;
+  text-align: center; 
+  line-height: 1.5;
+  border-top: 1px solid #ccc;
+  margin : 20px 10px;
+}
+table.type02 th {
+  width: 80px;
+  padding: 10px;
+  font-weight: 10px;
+  /* vertical-align: top; */
+  border-bottom: 1px solid #ccc;
+  
+}
+table.type02 td {
+  width: 80px;
+  padding: 10px;
+  /* vertical-align: top; */
+  border-bottom: 1px solid #ccc;
+}
+
+
+/* 상태바 나누기 위한 박스  */
+.aa{
+	height: 75px;
+	width:100%;
+	/* border: 1px solid #2c4feb; */
+}
+
+
+/* 테이블 담고 있는 박스  */
+.a{
+	padding: 0px;
+ 	margin: 0px; 
+ 	display : flex; 
+ 	/* height: 0vh; */
+ 	justify-content: center;
+ 	align-items: center;  
+	/* border: 5px solid #ff410e; */
+	height: 1000px;
+	width:100% 
+}
+
+.aaa{
+	line-height: 100px;
+	height: 75px;
+	width:100%;
+	/* border: 1px solid #2c4feb; */
+	text-align : center;
+	font-weight: bold;
+	font-size : 30px;
+}
+/* 게시판들 이름 적는곳 */
+.aaaa{
+	padding: 0px;
+ 	margin: 0px; 
+ 	display : flex; 
+ 	/* height: 0vh; */
+ 	justify-content: center;
+ 	/* align-items: center;   */
+	/* border: 5px solid #ff410e; */
+	height: 100px;
+	width:100% ;
+	line-height: 300px;
+	font-weight: 5px;
+	font-size:30px;
+}
+
+.b{
+	width:75px;
+	height:75px;
+	text-align : center;
+	line-height: 40px;
+	float:left;
+	background: red;
+}
+
+.bb{
+	width:75px;
+	height:75px;
+	text-align : center;
+	line-height: 40px;
+	float:right;
+	background: #1fe926;
+}
+
+.bbb{
+	width:75px;
+	height:75px;
+	text-align : center;
+	/* line-height: 40px; */
+	float:both;
+	background: #dae91a;
+}
+
+.inputsmall{
+	
+width: 90px; 
+height : 30px; 
+border :none; 
+background-color:#76448A; 
+color : white; 
+border-radius: 10px; 
+font-size : 15px;"
+
+}
