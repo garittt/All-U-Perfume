@@ -1,7 +1,7 @@
 # All-U-Perfume
 
-![1](/image/1.png) 
-![2](/image/2.png) 
+![1](/image/1.jsp) 
+
 
 ### 프로젝트 소개
 발음이 비슷한 eau de perfume(오 드 퍼퓸)에서 착안한 이름<br/> 
