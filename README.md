@@ -1,6 +1,6 @@
 # All-U-Perfume
 
-![1](/image/1.jsp) 
+![1](/image/1.jps) 
 
 
 ### 프로젝트 소개
