@@ -1,6 +1,5 @@
 # All-U-Perfume
 
-![1](/image/1.jpg) 
 ![mockup](/image/1.jpg)
 
 ### 프로젝트 소개
