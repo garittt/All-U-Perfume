@@ -26,6 +26,7 @@
 -  CSS  : 전체적인 디자인 전담하여 업무 수행
 
 ### 개발 환경
+------------ | ------------- 
 O/S | Windows 10, macOS Monterey
 Framework | Spring Tool Suite 3 (Version: 3.9.18.RELEASE) , Jupyter NoteBook
 Language | Java, JavaScript, Python3, HTML5, CSS3
